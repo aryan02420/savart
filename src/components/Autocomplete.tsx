@@ -5,17 +5,18 @@
  */
 
 import { Command as CommandPrimitive } from "cmdk";
-import { useMemo, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Command,
   CommandEmpty,
+  CommandLoading,
   CommandGroup,
   CommandItem,
   CommandList,
 } from "./ui/command";
 import { Input } from "./ui/input";
 import { Popover, PopoverAnchor, PopoverContent } from "./ui/popover";
-import { Skeleton } from "./ui/skeleton";
+
 
 type Props<T extends string> = {
   onSelect: (id: T) => void;
@@ -37,6 +38,7 @@ export function Autocomplete<T extends string>({
   placeholder = "Search...",
 }: Props<T>) {
   const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const reset = () => {
     onSearchTextChange("");
@@ -56,9 +58,8 @@ export function Autocomplete<T extends string>({
   };
 
   return (
-    <div className="flex items-center">
       <Popover open={open} onOpenChange={setOpen}>
-        <Command shouldFilter={false}>
+        <Command shouldFilter={false} className="w-full max-w-96" ref={containerRef}>
           <PopoverAnchor asChild>
             <CommandPrimitive.Input
               asChild
@@ -69,7 +70,7 @@ export function Autocomplete<T extends string>({
               onFocus={() => setOpen(true)}
               onBlur={onInputBlur}
             >
-              <Input placeholder={placeholder} className="min-w-96" />
+              <Input placeholder={placeholder} className="w-full" />
             </CommandPrimitive.Input>
           </PopoverAnchor>
           {!open && <CommandList aria-hidden="true" className="hidden" />}
@@ -84,47 +85,37 @@ export function Autocomplete<T extends string>({
                 e.preventDefault();
               }
             }}
-            className="w-[--radix-popover-trigger-width] p-0"
+            className="w-[var(--radix-popover-trigger-width)] p-0"
           >
             <CommandList>
-              {isLoading && (
-                <>
-                  <CommandPrimitive.Loading className="min-w-96 px-2 py-1.5 text-sm">
-                    <Skeleton className="h-[2em] w-full" />
-                  </CommandPrimitive.Loading>
-                  <CommandPrimitive.Loading className="min-w-96 px-2 py-1.5 text-sm">
-                    <Skeleton className="h-[2em] w-full" />
-                  </CommandPrimitive.Loading>
-                  <CommandPrimitive.Loading className="min-w-96 px-2 py-1.5 text-sm">
-                    <Skeleton className="h-[2em] w-full" />
-                  </CommandPrimitive.Loading>
-                  <CommandPrimitive.Loading className="min-w-96 px-2 py-1.5 text-sm">
-                    <Skeleton className="h-[2em] w-full" />
-                  </CommandPrimitive.Loading>
-                </>
-              )}
-              {items.length > 0 && !isLoading ? (
-                <CommandGroup>
-                  {items.map((option) => (
-                    <CommandItem
-                      key={option.id}
-                      value={option.id}
-                      onMouseDown={(e) => e.preventDefault()}
-                      onSelect={onSelectItem}
-                      className="min-w-96"
-                    >
-                      {option.name}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              ) : null}
-              {!isLoading ? (
-                <CommandEmpty className="min-w-96">{emptyMessage}</CommandEmpty>
-              ) : null}
+              <CommandGroup>
+                {isLoading && (
+                  <>
+                    <CommandLoading />
+                    <CommandLoading />
+                    <CommandLoading />
+                    <CommandLoading />
+                  </>
+                )}
+                {items.length > 0 && !isLoading ? (
+                    items.map((option) => (
+                      <CommandItem
+                        key={option.id}
+                        value={option.id}
+                        onMouseDown={(e) => e.preventDefault()}
+                        onSelect={onSelectItem}
+                      >
+                        {option.name}
+                      </CommandItem>
+                    ))
+                ) : null}
+                {!isLoading ? (
+                  <CommandEmpty>{emptyMessage}</CommandEmpty>
+                ) : null}
+              </CommandGroup>
             </CommandList>
           </PopoverContent>
         </Command>
       </Popover>
-    </div>
   );
 }

@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Skeleton } from "./skeleton"
 
 function Command({
   className,
@@ -21,7 +22,7 @@ function Command({
     <CommandPrimitive
       data-slot="command"
       className={cn(
-        "bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md",
+        "bg-popover text-popover-foreground flex w-full flex-col overflow-hidden rounded-md",
         className
       )}
       {...props}
@@ -98,7 +99,22 @@ function CommandEmpty({
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
+      className={cn("px-2 py-1.5 text-sm text-muted-foreground", className)}
+      {...props}
+    />
+  )
+}
+
+function CommandLoading({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Empty>) {
+  return (
+    <CommandPrimitive.Loading
+      data-slot="command-loading"
       className={cn("px-2 py-1.5 text-sm", className)}
+      children={children ?? <Skeleton>&nbsp;</Skeleton>}
       {...props}
     />
   )
@@ -171,6 +187,7 @@ export {
   CommandInput,
   CommandList,
   CommandEmpty,
+  CommandLoading,
   CommandGroup,
   CommandItem,
   CommandShortcut,

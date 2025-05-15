@@ -23,12 +23,12 @@ export default function Layout(props: Props) {
 	return (
 		<>
 			<header className="flex h-16 shrink-0 items-center gap-2 border-b border-b-sidebar-border shadow-xs sticky top-0 z-50 bg-inherit">
-				<div className="flex items-center gap-4 px-4">
+				<div className="flex items-center gap-4 px-4 w-full">
 					<Link
 						href={Routes.home()}
 					>
 						<Image
-							className="dark:invert"
+							className="dark:invert shrink-0"
 							src="/logo.svg"
 							alt="App logo"
 							width={36}
