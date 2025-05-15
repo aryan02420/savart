@@ -2,6 +2,11 @@
 
 https://savart.vercel.app/
 
+![home](https://github.com/user-attachments/assets/b377970c-e0c2-473e-8b2c-9d858b098b5d)
+
+![stock details](https://github.com/user-attachments/assets/b2861aa4-8bfa-4a9f-b41f-c89a4199029c)
+
+
 ## Architecture
 
 The app is built using Next js app router which supports server components.
