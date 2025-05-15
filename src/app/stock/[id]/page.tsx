@@ -1,5 +1,7 @@
 import StockDetails from '@/components/views/StockDetails';
 import { Browser, BrowserErrorCaptureEnum } from 'happy-dom';
+import { kv } from '@vercel/kv';
+import { SECONDS_IN_SIX_HOURS } from '@/lib/constants';
 
 export interface StockDetailsProps {
 	params: Promise<{ id: string }>
@@ -43,11 +45,13 @@ const staticData: StockDetailsData = {
 	]
 }
 
-export default async function StockDetailsPage(props: StockDetailsProps) {
-	const { params } = props;
-	const { id } = await params;
+async function getStockDetails(id: string) {
+	const kvKey = `stock-details-${id}`
+	const cachedData = await kv.get<StockDetailsData>(kvKey);
 
-	// return <StockDetails data={staticData} />
+	if (cachedData) {
+		return cachedData
+	}
 
 	const browser = new Browser({ settings: { errorCapture: BrowserErrorCaptureEnum.processLevel } });
 	const page = browser.newPage();
@@ -91,12 +95,23 @@ export default async function StockDetailsPage(props: StockDetailsProps) {
 
 	prosEl.querySelectorAll('li').forEach(node => {
 		data.pros.push(node.innerText.replaceAll(/\s+/g, " ").trim());
-	})
+	});
 
 	consEl.querySelectorAll('li').forEach(node => {
 		data.cons.push(node.innerText.replaceAll(/\s+/g, " ").trim());
-	})
+	});
 
+	kv.set(kvKey, data, { ex: SECONDS_IN_SIX_HOURS });
+	return data;
+}
+
+export default async function StockDetailsPage(props: StockDetailsProps) {
+	const { params } = props;
+	const { id } = await params;
+
+	// return <StockDetails data={staticData} />
+	
+	const data = await getStockDetails(id);
 	console.log(data);
 
 	return <StockDetails data={data} />

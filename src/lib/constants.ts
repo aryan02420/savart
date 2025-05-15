@@ -1,0 +1,1 @@
+export const SECONDS_IN_SIX_HOURS = 6 * 3600

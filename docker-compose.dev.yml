@@ -1,0 +1,16 @@
+version: "3"
+services:
+  # starts a redis server
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  # expose the redis server as HTTP API, which is familiar to vercel/kv
+  serverless-redis-http:
+    ports:
+      - "8079:80"
+    image: hiett/serverless-redis-http:latest
+    environment:
+      SRH_MODE: env
+      SRH_TOKEN: development_token
+      SRH_CONNECTION_STRING: "redis://redis:6379"
