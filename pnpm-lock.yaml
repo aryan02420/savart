@@ -17,6 +17,9 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.2.2
         version: 1.2.2(@types/react@19.1.4)(react@19.1.0)
+      '@tanstack/react-pacer':
+        specifier: ^0.6.0
+        version: 0.6.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@tanstack/react-query':
         specifier: ^5.76.1
         version: 5.76.1(react@19.1.0)
@@ -725,8 +728,19 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
+  '@tanstack/pacer@0.6.0':
+    resolution: {integrity: sha512-uunCU7ABQoq4pgujY3gRerPa6jp+K7/taAikYcY/xJTH+PJZu0YzOulMpJRsLVBHFd2kz7cAs3eOq1jA4Q9rCQ==}
+    engines: {node: '>=18'}
+
   '@tanstack/query-core@5.76.0':
     resolution: {integrity: sha512-FN375hb8ctzfNAlex5gHI6+WDXTNpe0nbxp/d2YJtnP+IBM6OUm7zcaoCW6T63BawGOYZBbKC0iPvr41TteNVg==}
+
+  '@tanstack/react-pacer@0.6.0':
+    resolution: {integrity: sha512-f0U7oySn6yQKmbe+np0pxNt93PJGmhsWy5hxWpRpzVCbm/hUQyRrRXk2Ai2/KJiB0n7o/Q2KRofYWo6TthwksQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
 
   '@tanstack/react-query@5.76.1':
     resolution: {integrity: sha512-YxdLZVGN4QkT5YT1HKZQWiIlcgauIXEIsMOTSjvyD5wLYK8YVvKZUPAysMqossFJJfDpJW3pFn7WNZuPOqq+fw==}
@@ -2951,7 +2965,15 @@ snapshots:
       - supports-color
       - typescript
 
+  '@tanstack/pacer@0.6.0': {}
+
   '@tanstack/query-core@5.76.0': {}
+
+  '@tanstack/react-pacer@0.6.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@tanstack/pacer': 0.6.0
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   '@tanstack/react-query@5.76.1(react@19.1.0)':
     dependencies:

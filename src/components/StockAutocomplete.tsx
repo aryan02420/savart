@@ -1,8 +1,9 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { Autocomplete } from "./Autocomplete";
-import { getSearchStocksQueryKey, searchStocks } from "@/app/api/search-stocks/route";
+import { getSearchStocksQueryKey, searchStocks } from "@/app/api/search-stocks/rpc";
 import { useState } from "react";
+import { useDebouncedValue } from "@tanstack/react-pacer";
 
 const recommendedStockList = [
 	{
@@ -40,11 +41,15 @@ export function StockAutocomplete(props: Props) {
 	const { onStockSelected } = props;
 	
 	const [searchText, setSearchText] = useState("");
-	
+	const [query, debouncer] = useDebouncedValue(searchText, {
+		wait: 100,
+	})
+	const isStale = debouncer.getIsPending()
+
 	const { data, isFetching, isError } = useQuery({
-		queryKey: getSearchStocksQueryKey(searchText),
-		queryFn: () => searchStocks(searchText),
-		enabled: Boolean(searchText),
+		queryKey: getSearchStocksQueryKey(query),
+		queryFn: () => searchStocks(query),
+		enabled: Boolean(query),
 	});
 
 	const items = searchText && data ? data : recommendedStockList;
@@ -57,7 +62,7 @@ export function StockAutocomplete(props: Props) {
 			onSelect={onStockSelected}
 			searchText={searchText}
 			onSearchTextChange={setSearchText}
-			isLoading={isFetching}
+			isLoading={isFetching || isStale}
 		/>
 	);
 }

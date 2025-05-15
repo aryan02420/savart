@@ -1,7 +1,8 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
+import { SearchStockResponse } from "./rpc";
 
-export const ScreenerResponseSchema = z.array(
+const ScreenerResponseSchema = z.array(
   z.union([
     z.object({
 		id: z.number(),
@@ -16,26 +17,6 @@ export const ScreenerResponseSchema = z.array(
 	}),
   ])
 )
-
-export type SearchStockResponse = {
-	id: string;
-	name: string;
-}[];
-
-export async function searchStocks(query: string): Promise<SearchStockResponse> {
-	const res = await fetch(`/api/search-stocks/?q=${query}`, {
-		method: "GET"
-	});
-	if (res.status >= 400) {
-		throw new Error("Error fetching stocks");
-	}
-	const json = await res.json();
-	return json.data;
-}
-
-export function getSearchStocksQueryKey(query: string) {
-	return ["search-stocks", query];
-}
 
 export async function GET(request: NextRequest) {
 	try {

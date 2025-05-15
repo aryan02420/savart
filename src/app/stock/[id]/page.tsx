@@ -19,7 +19,7 @@ export interface StockDetailsData {
 	cons: string[];
 }
 
-const staticData: StockDetailsData = {
+const _staticData: StockDetailsData = {
 	id: 'COASTCORP',
 	name: 'Coastal Corporation Ltd',
 	description: 'Incorporated in 1981, Coastal Corporation Ltd is engaged in processing and export of sea food',
@@ -50,6 +50,7 @@ async function getStockDetails(id: string) {
 	const cachedData = await kv.get<StockDetailsData>(kvKey);
 
 	if (cachedData) {
+		console.log(`Stock data for ${id} is available in cache.`, cachedData);
 		return cachedData
 	}
 
@@ -70,7 +71,7 @@ async function getStockDetails(id: string) {
 		throw new Error("We have encountered and error and our team has been notified.")
 	}
 
-	if (pageResponse?.status >= 400) {
+	if (!pageResponse?.ok) {
 		throw new Error(`Stock ${id} not found.`)
 	}
 
@@ -101,6 +102,7 @@ async function getStockDetails(id: string) {
 		data.cons.push(node.innerText.replaceAll(/\s+/g, " ").trim());
 	});
 
+	console.log(`Scraped stock data for ${id}.`, data);
 	kv.set(kvKey, data, { ex: SECONDS_IN_SIX_HOURS });
 	return data;
 }
@@ -112,7 +114,6 @@ export default async function StockDetailsPage(props: StockDetailsProps) {
 	// return <StockDetails data={staticData} />
 	
 	const data = await getStockDetails(id);
-	console.log(data);
 
 	return <StockDetails data={data} />
 }

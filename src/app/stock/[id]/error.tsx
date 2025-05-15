@@ -13,7 +13,7 @@ export default function Error({
 	return (
 		<main className="flex flex-col gap-4 items-center py-4 sm:py-20">
 			<h1 className="text-2xl dark:text-neutral-200 font-bold text-center w-full">Something went wrong!</h1>
-			<p className="text-muted-foreground text-center">{error.message}</p>
+			<p className="text-muted-foreground text-center max-w-108">{error.message}</p>
 			<Button
 				onClick={reset}
 			>

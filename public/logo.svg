@@ -1,0 +1,13 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+	  <linearGradient id="gradLine" x1="0" y1="120" x2="120" y2="0" gradientUnits="userSpaceOnUse">
+		<stop offset="0%" stop-color="#4CAF50"/>
+		<stop offset="100%" stop-color="#2196F3"/>
+	  </linearGradient>
+	</defs>
+	<rect width="120" height="120" rx="24" fill="url(#gradLine)"/>
+	<g stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+	  <path d="M20 90L40 60L60 75L80 45L100 60"/>
+	</g>
+  </svg>
+  
