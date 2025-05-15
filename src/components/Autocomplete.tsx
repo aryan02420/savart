@@ -38,17 +38,7 @@ export function Autocomplete<T extends string>({
 }: Props<T>) {
   const [open, setOpen] = useState(false);
 
-  const labels = useMemo(
-    () =>
-      items.reduce((acc, item) => {
-        acc[item.id] = item.name;
-        return acc;
-      }, {} as Record<string, string>),
-    [items]
-  );
-
   const reset = () => {
-    onSelect("" as T);
     onSearchTextChange("");
   };
 
@@ -61,7 +51,7 @@ export function Autocomplete<T extends string>({
   };
 
   const onSelectItem = (inputValue: string) => {
-    onSelect(inputValue as T);
+    if (inputValue) onSelect(inputValue as T);
     setOpen(false);
   };
 
@@ -79,7 +69,7 @@ export function Autocomplete<T extends string>({
               onFocus={() => setOpen(true)}
               onBlur={onInputBlur}
             >
-              <Input placeholder={placeholder} />
+              <Input placeholder={placeholder} className="min-w-96" />
             </CommandPrimitive.Input>
           </PopoverAnchor>
           {!open && <CommandList aria-hidden="true" className="hidden" />}
@@ -98,11 +88,20 @@ export function Autocomplete<T extends string>({
           >
             <CommandList>
               {isLoading && (
-                <CommandPrimitive.Loading>
-                  <div className="p-1">
-                    <Skeleton className="h-6 w-full" />
-                  </div>
-                </CommandPrimitive.Loading>
+                <>
+                  <CommandPrimitive.Loading className="min-w-96 px-2 py-1.5 text-sm">
+                    <Skeleton className="h-[2em] w-full" />
+                  </CommandPrimitive.Loading>
+                  <CommandPrimitive.Loading className="min-w-96 px-2 py-1.5 text-sm">
+                    <Skeleton className="h-[2em] w-full" />
+                  </CommandPrimitive.Loading>
+                  <CommandPrimitive.Loading className="min-w-96 px-2 py-1.5 text-sm">
+                    <Skeleton className="h-[2em] w-full" />
+                  </CommandPrimitive.Loading>
+                  <CommandPrimitive.Loading className="min-w-96 px-2 py-1.5 text-sm">
+                    <Skeleton className="h-[2em] w-full" />
+                  </CommandPrimitive.Loading>
+                </>
               )}
               {items.length > 0 && !isLoading ? (
                 <CommandGroup>
@@ -112,6 +111,7 @@ export function Autocomplete<T extends string>({
                       value={option.id}
                       onMouseDown={(e) => e.preventDefault()}
                       onSelect={onSelectItem}
+                      className="min-w-96"
                     >
                       {option.name}
                     </CommandItem>
@@ -119,7 +119,7 @@ export function Autocomplete<T extends string>({
                 </CommandGroup>
               ) : null}
               {!isLoading ? (
-                <CommandEmpty>{emptyMessage}</CommandEmpty>
+                <CommandEmpty className="min-w-96">{emptyMessage}</CommandEmpty>
               ) : null}
             </CommandList>
           </PopoverContent>
