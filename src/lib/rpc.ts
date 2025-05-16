@@ -10,8 +10,7 @@ export async function searchStocks(query: string): Promise<SearchStockResponse> 
 	if (!res.ok) {
 		throw new Error("Error fetching stocks");
 	}
-	const json = await res.json();
-	return json.data;
+	return res.json();
 }
 
 export function getSearchStocksQueryKey(query: string) {
