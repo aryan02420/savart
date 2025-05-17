@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { SearchStockResponse } from "../rpc";
+import { kv } from "@vercel/kv";
+import { SECONDS_IN_SIX_HOURS } from "../constants";
 
 const ScreenerResponseSchema = z.array(
 	z.union([
@@ -18,6 +20,13 @@ const ScreenerResponseSchema = z.array(
 );
 
 export async function searchCompanies(searchQuery: string) {
+	const kvKey = `search-companies-${searchQuery}`;
+	const cachedData = await kv.get<string>(kvKey);
+
+	if (cachedData) {
+		return cachedData;
+	}
+
 	const searchResponse = await fetch(`https://www.screener.in/api/company/search/?q=${searchQuery}&v=3&fts=1`, {
 		credentials: "include",
 		headers: {
@@ -50,5 +59,6 @@ export async function searchCompanies(searchQuery: string) {
 		});
 	}
 
+	kv.set(kvKey, companies, { ex: SECONDS_IN_SIX_HOURS });
 	return companies;
 }

@@ -7,10 +7,12 @@ export async function searchStocks(query: string): Promise<SearchStockResponse> 
 	const res = await fetch(`/api/search-stocks/?q=${query}`, {
 		method: "GET"
 	});
+	const data = await res.json();
 	if (!res.ok) {
-		throw new Error("Error fetching stocks");
+		console.log(data);
+		throw new Error(data.error?.message ?? "Something went wrong");
 	}
-	return res.json();
+	return data
 }
 
 export function getSearchStocksQueryKey(query: string) {

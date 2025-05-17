@@ -26,6 +26,7 @@ type Props<T extends string> = {
   isLoading?: boolean;
   emptyMessage?: string;
   placeholder?: string;
+  error?: string;
 };
 
 export function Autocomplete<T extends string>({
@@ -36,6 +37,7 @@ export function Autocomplete<T extends string>({
   isLoading,
   emptyMessage = "No items.",
   placeholder = "Search...",
+  error,
 }: Props<T>) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,6 +61,7 @@ export function Autocomplete<T extends string>({
 
   return (
       <Popover open={open} onOpenChange={setOpen}>
+        {error ? <p className="text-xs text-destructive">{error}</p> : null}
         <Command shouldFilter={false} className="w-full max-w-96" ref={containerRef}>
           <PopoverAnchor asChild>
             <CommandPrimitive.Input
