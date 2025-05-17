@@ -19,10 +19,12 @@ export async function GET(request: NextRequest) {
 			return Response.json(companies);
 		}
 
+		Promise.try
+
 		const companies = await searchCompanies(searchQuery);
 		return Response.json(companies);
 
 	} catch (error: unknown) {
-		return Response.json({ error: error }, { status: 500 })
+		return Response.json({ error: error instanceof Error ? error.message : error }, { status: 500 });
 	}
 }

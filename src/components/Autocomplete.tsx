@@ -59,66 +59,78 @@ export function Autocomplete<T extends string>({
     setOpen(false);
   };
 
+  let commandContentNode: React.ReactNode = null;
+
+  if (isLoading) {
+    commandContentNode = (
+      <>
+        <CommandLoading />
+        <CommandLoading />
+        <CommandLoading />
+        <CommandLoading />
+      </>
+    );
+  } else if (Boolean(error)) {
+    commandContentNode = (
+      <CommandEmpty>{error}</CommandEmpty>
+    );
+  } else if (items.length > 0) {
+    commandContentNode = (
+      items.map((option) => (
+        <CommandItem
+          key={option.id}
+          value={option.id}
+          onMouseDown={(e) => e.preventDefault()}
+          onSelect={onSelectItem}
+        >
+          {option.name}
+        </CommandItem>
+      ))
+    );
+  } else {
+    commandContentNode = (
+      <CommandEmpty>{emptyMessage}</CommandEmpty>
+    );
+  }
+
+
   return (
-      <Popover open={open} onOpenChange={setOpen}>
-        {error ? <p className="text-xs text-destructive">{error}</p> : null}
-        <Command shouldFilter={false} className="w-full max-w-96" ref={containerRef}>
-          <PopoverAnchor asChild>
-            <CommandPrimitive.Input
-              asChild
-              value={searchText}
-              onValueChange={onSearchTextChange}
-              onKeyDown={(e) => setOpen(e.key !== "Escape")}
-              onMouseDown={() => setOpen((open) => !!searchText || !open)}
-              onFocus={() => setOpen(true)}
-              onBlur={onInputBlur}
-            >
-              <Input placeholder={placeholder} className="w-full" />
-            </CommandPrimitive.Input>
-          </PopoverAnchor>
-          {!open && <CommandList aria-hidden="true" className="hidden" />}
-          <PopoverContent
+    <Popover open={open} onOpenChange={setOpen}>
+      <Command shouldFilter={false} className="w-full max-w-96" ref={containerRef}>
+        <PopoverAnchor asChild>
+          <CommandPrimitive.Input
             asChild
-            onOpenAutoFocus={(e) => e.preventDefault()}
-            onInteractOutside={(e) => {
-              if (
-                e.target instanceof Element &&
-                e.target.hasAttribute("cmdk-input")
-              ) {
-                e.preventDefault();
-              }
-            }}
-            className="w-[var(--radix-popover-trigger-width)] p-0"
+            value={searchText}
+            onValueChange={onSearchTextChange}
+            onKeyDown={(e) => setOpen(e.key !== "Escape")}
+            onMouseDown={() => setOpen((open) => !!searchText || !open)}
+            onFocus={() => setOpen(true)}
+            onBlur={onInputBlur}
           >
-            <CommandList>
-              <CommandGroup>
-                {isLoading && (
-                  <>
-                    <CommandLoading />
-                    <CommandLoading />
-                    <CommandLoading />
-                    <CommandLoading />
-                  </>
-                )}
-                {items.length > 0 && !isLoading ? (
-                    items.map((option) => (
-                      <CommandItem
-                        key={option.id}
-                        value={option.id}
-                        onMouseDown={(e) => e.preventDefault()}
-                        onSelect={onSelectItem}
-                      >
-                        {option.name}
-                      </CommandItem>
-                    ))
-                ) : null}
-                {!isLoading ? (
-                  <CommandEmpty>{emptyMessage}</CommandEmpty>
-                ) : null}
-              </CommandGroup>
-            </CommandList>
-          </PopoverContent>
-        </Command>
-      </Popover>
+            <Input placeholder={placeholder} className="w-full" />
+          </CommandPrimitive.Input>
+        </PopoverAnchor>
+        {!open && <CommandList aria-hidden="true" className="hidden" />}
+        <PopoverContent
+          asChild
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onInteractOutside={(e) => {
+            if (
+              e.target instanceof Element &&
+              e.target.hasAttribute("cmdk-input")
+            ) {
+              e.preventDefault();
+            }
+          }}
+          className="w-[var(--radix-popover-trigger-width)] p-0"
+        >
+          <CommandList>
+            <CommandGroup>
+              {commandContentNode}
+            </CommandGroup>
+          </CommandList>
+        </PopoverContent>
+      </Command>
+    </Popover>
   );
 }

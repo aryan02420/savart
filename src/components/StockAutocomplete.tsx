@@ -63,7 +63,7 @@ export function StockAutocomplete(props: Props) {
 			searchText={searchText}
 			onSearchTextChange={setSearchText}
 			isLoading={isFetching || isStale}
-			error={error?.message}
+			error={error?.toLocaleString()}
 		/>
 	);
 }

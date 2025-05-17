@@ -9,8 +9,8 @@ export async function searchStocks(query: string): Promise<SearchStockResponse> 
 	});
 	const data = await res.json();
 	if (!res.ok) {
-		console.log(data);
-		throw new Error(data.error?.message ?? "Something went wrong");
+		console.log("RPC Error:", data);
+		throw new Error(data.error);
 	}
 	return data
 }
